@@ -1,3 +1,4 @@
+import 'package:ark/showLocation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -9,6 +10,7 @@ class Location extends StatefulWidget {
 }
 
 class _LocationState extends State<Location> {
+  late String lat, long;
   Future<Position> _getLocation() async {
     bool servicePermission = await Geolocator.isLocationServiceEnabled();
     if (!servicePermission) {
@@ -34,7 +36,17 @@ class _LocationState extends State<Location> {
       child: ElevatedButton(
         child: Text('hello'),
         onPressed: (() {
-          _getLocation();
+          _getLocation().then(((value) {
+            lat = '${value.latitude}';
+            long = '${value.longitude}';
+            setState(() {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ShowLocation(latitude: lat, longitude: long)));
+            });
+          }));
         }),
       ),
     );
