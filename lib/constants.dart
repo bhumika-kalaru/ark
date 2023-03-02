@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 final Normal = GoogleFonts.montserrat(fontSize: 40);
 
 final Color? white = Colors.white;
+final Color? blue = Colors.blue;
 
 // class MyWidget extends StatelessWidget {
 //   const MyWidget({super.key});

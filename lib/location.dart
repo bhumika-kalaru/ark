@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:ark/showLocation.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,6 +16,7 @@ class Location extends StatefulWidget {
 
 class _LocationState extends State<Location> {
   late String lat, long;
+
   Future<Position> _getLocation() async {
     bool servicePermission = await Geolocator.isLocationServiceEnabled();
     if (!servicePermission) {
@@ -37,33 +41,70 @@ class _LocationState extends State<Location> {
     double h = MediaQuery.of(context).size.height,
         w = (MediaQuery.of(context).size.height);
     return Scaffold(
-      backgroundColor: Colors.red,
+      backgroundColor: white,
       body: Center(
-        child: GestureDetector(
-          child: Container(
-              height: h / 15,
-              width: w / 6,
-              decoration: BoxDecoration(
-                  color: Colors.blue, borderRadius: BorderRadius.circular(10)),
-              child: Center(
-                  child: Text(
-                'Get Location',
-                style: GoogleFonts.openSans(
-                    color: white, fontSize: 20, fontWeight: FontWeight.w600),
-              ))),
-          onTap: (() {
-            _getLocation().then(((value) {
-              lat = '${value.latitude}';
-              long = '${value.longitude}';
-              setState(() {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            ShowLocation(latitude: lat, longitude: long)));
-              });
-            }));
-          }),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            GestureDetector(
+              child: Container(
+                  margin: EdgeInsets.symmetric(
+                      horizontal: w / 20, vertical: h / 40),
+                  height: h / 15,
+                  width: w / 6,
+                  decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Center(
+                      child: Text(
+                    'Get Location',
+                    style: GoogleFonts.openSans(
+                        color: white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600),
+                  ))),
+              onTap: (() {
+                _getLocation().then(((value) {
+                  lat = '${value.latitude}';
+                  long = '${value.longitude}';
+                  setState(() {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ShowLocation(latitude: lat, longitude: long)));
+                  });
+                }));
+              }),
+            ),
+            GestureDetector(
+              child: Container(
+                  margin: EdgeInsets.symmetric(
+                      horizontal: w / 20, vertical: h / 40),
+                  height: h / 15,
+                  width: w / 6,
+                  decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Center(
+                    child: Text(
+                      "Upload Doc",
+                      style: GoogleFonts.openSans(
+                          color: white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  )),
+              onTap: (() async {
+                FilePickerResult? result =
+                    await FilePicker.platform.pickFiles();
+
+                if (result != null) {
+                  File file = File(result.files.single.path!);
+                } else {}
+              }),
+            )
+          ],
         ),
       ),
     );
