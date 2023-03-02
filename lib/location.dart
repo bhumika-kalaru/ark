@@ -40,73 +40,32 @@ class _LocationState extends State<Location> {
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height,
         w = (MediaQuery.of(context).size.height);
-    return Scaffold(
-      backgroundColor: white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            GestureDetector(
-              child: Container(
-                  margin: EdgeInsets.symmetric(
-                      horizontal: w / 20, vertical: h / 40),
-                  height: h / 15,
-                  width: w / 6,
-                  decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Center(
-                      child: Text(
-                    'Get Location',
-                    style: GoogleFonts.openSans(
-                        color: white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600),
-                  ))),
-              onTap: (() {
-                _getLocation().then(((value) {
-                  lat = '${value.latitude}';
-                  long = '${value.longitude}';
-                  setState(() {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ShowLocation(latitude: lat, longitude: long)));
-                  });
-                }));
-              }),
-            ),
-            GestureDetector(
-              child: Container(
-                  margin: EdgeInsets.symmetric(
-                      horizontal: w / 20, vertical: h / 40),
-                  height: h / 15,
-                  width: w / 6,
-                  decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Center(
-                    child: Text(
-                      "Upload Doc",
-                      style: GoogleFonts.openSans(
-                          color: white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  )),
-              onTap: (() async {
-                FilePickerResult? result =
-                    await FilePicker.platform.pickFiles();
-
-                if (result != null) {
-                  File file = File(result.files.single.path!);
-                } else {}
-              }),
-            )
-          ],
-        ),
-      ),
+    return GestureDetector(
+      child: Container(
+          margin: EdgeInsets.symmetric(horizontal: w / 20, vertical: h / 40),
+          height: h / 15,
+          width: w / 2,
+          decoration: BoxDecoration(
+              color: Colors.blue, borderRadius: BorderRadius.circular(10)),
+          child: Center(
+              child: Text(
+            'Get Location',
+            style: GoogleFonts.openSans(
+                color: white, fontSize: 20, fontWeight: FontWeight.w600),
+          ))),
+      onTap: (() {
+        _getLocation().then(((value) {
+          lat = '${value.latitude}';
+          long = '${value.longitude}';
+          setState(() {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ShowLocation(latitude: lat, longitude: long)));
+          });
+        }));
+      }),
     );
   }
 }

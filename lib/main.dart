@@ -1,3 +1,4 @@
+import 'package:ark/homePage.dart';
 import 'package:ark/location.dart';
 import 'package:ark/pickFile.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
@@ -35,7 +36,7 @@ class _splashState extends State<splash> {
   Widget build(BuildContext context) {
     return AnimatedSplashScreen(
       splash: 'images/exam.png',
-      nextScreen: Location(),
+      nextScreen: HomePage(),
       splashTransition: SplashTransition.rotationTransition,
       // pageTransitionType: PageTransitionType.scale,
       duration: 5000,
