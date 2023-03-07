@@ -41,6 +41,7 @@ dependencies:
   google_fonts:
   firebase_auth:
   cloud_firestore:
+  email_otp:
   permission_handler:
   internet_connection_checker:
   file_picker:

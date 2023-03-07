@@ -1,18 +1,17 @@
-import 'package:ark/signUp.dart';
+import 'package:ark/signIn.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'constants.dart';
 import 'package:flutter/material.dart';
 
-class SignIn extends StatefulWidget {
-  const SignIn({super.key});
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
 
   @override
-  State<SignIn> createState() => _SignInState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _SignInState extends State<SignIn> {
-  // late TextEditingController emailController, password_controller;
+class _SignUpState extends State<SignUp> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   @override
@@ -22,11 +21,12 @@ class _SignInState extends State<SignIn> {
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height,
         w = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(title: Text("Sign in screen")),
+      appBar: AppBar(title: Text("Sign Up screen")),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -61,24 +61,24 @@ class _SignInState extends State<SignIn> {
             ),
             onTap: () {
               setState(() {
-                signIn();
+                signUp();
               });
             },
           ),
           GestureDetector(
             child: RichText(
                 text: TextSpan(
-                    text: 'Create an account?!',
+                    text: 'Already a user?!',
                     style: GoogleFonts.openSans(color: black, fontSize: 16),
                     children: [
                   TextSpan(
-                    text: "signUp",
+                    text: "LogIn",
                     style: GoogleFonts.openSans(color: blue, fontSize: 16),
                   )
                 ])),
             onTap: (() {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => SignUp()));
+                  context, MaterialPageRoute(builder: (context) => SignIn()));
             }),
           )
         ],
@@ -86,10 +86,10 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  Future signIn() async {
+  Future signUp() async {
     try {
       await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
+          .createUserWithEmailAndPassword(
             email: emailController.text,
             password: passwordController.text,
           )

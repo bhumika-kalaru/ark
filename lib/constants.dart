@@ -7,6 +7,7 @@ final Normal = GoogleFonts.montserrat(fontSize: 40);
 
 final Color? white = Colors.white;
 final Color? blue = Colors.blue;
+final Color? black = Colors.black;
 
 // class MyWidget extends StatelessWidget {
 //   const MyWidget({super.key});
