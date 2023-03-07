@@ -66,7 +66,7 @@ class _SignInState extends State<SignIn> {
                 signIn();
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
+                  MaterialPageRoute(builder: (context) => MainScreen()),
                   (Route<dynamic> route) => false,
                 );
               });
