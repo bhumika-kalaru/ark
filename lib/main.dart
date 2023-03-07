@@ -5,6 +5,8 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'signIn.dart';
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -39,7 +41,7 @@ class _splashState extends State<splash> {
   Widget build(BuildContext context) {
     return AnimatedSplashScreen(
       splash: 'images/exam.png',
-      nextScreen: HomePage(),
+      nextScreen: SignIn(),
       splashTransition: SplashTransition.rotationTransition,
       // pageTransitionType: PageTransitionType.scale,
       duration: 5000,
