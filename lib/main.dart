@@ -3,6 +3,7 @@ import 'package:ark/location.dart';
 import 'package:ark/logIn.dart';
 import 'package:ark/pickFile.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:ark/verify.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -42,7 +43,7 @@ class _splashState extends State<splash> {
   Widget build(BuildContext context) {
     return AnimatedSplashScreen(
       splash: 'images/exam.png',
-      nextScreen: LogIn(),
+      nextScreen: Verify(),
       splashTransition: SplashTransition.rotationTransition,
       // pageTransitionType: PageTransitionType.scale,
       duration: 5000,

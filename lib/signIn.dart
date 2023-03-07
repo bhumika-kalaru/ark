@@ -1,4 +1,6 @@
+import 'package:ark/homePage.dart';
 import 'package:ark/signUp.dart';
+import 'package:ark/verify.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'constants.dart';
@@ -62,6 +64,11 @@ class _SignInState extends State<SignIn> {
             onTap: () {
               setState(() {
                 signIn();
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                  (Route<dynamic> route) => false,
+                );
               });
             },
           ),
@@ -78,7 +85,7 @@ class _SignInState extends State<SignIn> {
                 ])),
             onTap: (() {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => SignUp()));
+                  context, MaterialPageRoute(builder: (context) => Verify()));
             }),
           )
         ],

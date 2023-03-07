@@ -1,3 +1,4 @@
+import 'package:ark/homePage.dart';
 import 'package:ark/signIn.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:email_otp/email_otp.dart';
 
 class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+  SignUp({required this.email, super.key});
+  String email;
 
   @override
   State<SignUp> createState() => _SignUpState();
@@ -63,6 +65,11 @@ class _SignUpState extends State<SignUp> {
             onTap: () {
               setState(() {
                 signUp();
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                  (Route<dynamic> route) => false,
+                );
               });
             },
           ),
