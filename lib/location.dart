@@ -44,7 +44,7 @@ class _LocationState extends State<Location> {
       child: Container(
           margin: EdgeInsets.symmetric(horizontal: w / 20, vertical: h / 40),
           height: h / 15,
-          width: w / 2,
+          width: w / 3,
           decoration: BoxDecoration(
               color: Colors.blue, borderRadius: BorderRadius.circular(10)),
           child: Center(
