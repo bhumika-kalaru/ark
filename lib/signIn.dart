@@ -1,4 +1,4 @@
-import 'package:ark/homePage.dart';
+import 'package:ark/mainScreen.dart';
 import 'package:ark/signUp.dart';
 import 'package:ark/verify.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,7 +28,10 @@ class _SignInState extends State<SignIn> {
     double h = MediaQuery.of(context).size.height,
         w = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(title: Text("Sign in screen")),
+      appBar: AppBar(
+        title: Text("Sign in screen"),
+        centerTitle: true,
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

@@ -1,4 +1,5 @@
 import 'package:ark/homePage.dart';
+import 'package:ark/mainScreen.dart';
 import 'package:ark/location.dart';
 import 'package:ark/logIn.dart';
 import 'package:ark/pickFile.dart';
@@ -43,10 +44,9 @@ class _splashState extends State<splash> {
   Widget build(BuildContext context) {
     return AnimatedSplashScreen(
       splash: 'images/exam.png',
-      nextScreen: Verify(),
+      nextScreen: HomePage(),
       splashTransition: SplashTransition.rotationTransition,
-      // pageTransitionType: PageTransitionType.scale,
-      duration: 5000,
+      duration: 3000,
     );
   }
 }

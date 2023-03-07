@@ -1,4 +1,4 @@
-import 'package:ark/homePage.dart';
+import 'package:ark/mainScreen.dart';
 import 'package:ark/signIn.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';

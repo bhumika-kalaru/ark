@@ -19,6 +19,10 @@ class _VerifyState extends State<Verify> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Email Verification"),
+        centerTitle: true,
+      ),
       body: Container(
         child: Padding(
           padding: const EdgeInsets.all(15),
