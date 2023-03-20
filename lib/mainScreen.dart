@@ -1,4 +1,5 @@
 import 'package:ark/location.dart';
+import 'package:ark/logIn.dart';
 import 'package:ark/pickFile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -18,8 +19,13 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: AppBar(actions: [
         IconButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => LogIn()),
+                (Route<dynamic> route) => false,
+              );
             },
             icon: Icon(Icons.logout))
       ]),

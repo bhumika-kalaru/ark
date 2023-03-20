@@ -80,20 +80,20 @@ class _VerifyState extends State<Verify> {
                               .showSnackBar(const SnackBar(
                             content: Text("OTP is verified"),
                           ));
+                          setState(() {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SignUp(
+                                          email: email.toString(),
+                                        )));
+                          });
                         } else {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
                             content: Text("Invalid OTP"),
                           ));
                         }
-                        setState(() {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SignUp(
-                                        email: email.toString(),
-                                      )));
-                        });
                       },
                       child: const Text("Verify")),
                 ],

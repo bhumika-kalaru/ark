@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'constants.dart';
 import 'package:flutter/material.dart';
 
+import 'homePage.dart';
+
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
 
@@ -51,30 +53,56 @@ class _SignInState extends State<SignIn> {
             ),
           ),
           GestureDetector(
-            child: Container(
-              margin: EdgeInsets.symmetric(vertical: h / 80),
-              height: h / 25,
-              width: w / 4,
-              child: Center(
-                  child: Text(
-                "Submit",
-                style: GoogleFonts.openSans(
-                    color: white, fontWeight: FontWeight.w500, fontSize: 18),
-              )),
-              decoration: BoxDecoration(
-                  color: blue, borderRadius: BorderRadius.circular(10)),
-            ),
-            onTap: () {
-              setState(() {
-                signIn();
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => MainScreen()),
-                  (Route<dynamic> route) => false,
-                );
-              });
-            },
-          ),
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: h / 80),
+                height: h / 25,
+                width: w / 4,
+                child: Center(
+                    child: Text(
+                  "Submit",
+                  style: GoogleFonts.openSans(
+                      color: white, fontWeight: FontWeight.w500, fontSize: 18),
+                )),
+                decoration: BoxDecoration(
+                    color: blue, borderRadius: BorderRadius.circular(10)),
+              ),
+              onTap: () async {
+                try {
+                  UserCredential userCredential = await FirebaseAuth.instance
+                      .signInWithEmailAndPassword(
+                          email: emailController.text,
+                          password: passwordController.text);
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainScreen()),
+                    (Route<dynamic> route) => false,
+                  );
+                } on FirebaseAuthException catch (e) {
+                  if (e.code == 'user-not-found') {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("No user found for that email."),
+                      backgroundColor: Colors.red,
+                    ));
+                    print('No user found for that email.');
+                  } else if (e.code == 'wrong-password') {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("Wrong Password"),
+                      backgroundColor: Colors.red,
+                    ));
+                  }
+                }
+              }
+              // {
+              // setState(() {
+              // signIn();
+              // Navigator.pushAndRemoveUntil(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => MainScreen()),
+              //   (Route<dynamic> route) => false,
+              // );
+              // });
+              // },
+              ),
           GestureDetector(
             child: RichText(
                 text: TextSpan(
@@ -96,17 +124,17 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  Future signIn() async {
-    try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-            email: emailController.text,
-            password: passwordController.text,
-          )
-          .catchError((error) => print(error));
-      ;
-    } on FirebaseAuthException catch (e) {
-      print(e);
-    }
-  }
+  // Future signIn() async {
+  //   try {
+  //     await FirebaseAuth.instance
+  //         .signInWithEmailAndPassword(
+  //           email: emailController.text,
+  //           password: passwordController.text,
+  //         )
+  //         .catchError((error) => print(error));
+  //     ;
+  //   } on FirebaseAuthException catch (e) {
+  //     print(e);
+  //   }
+  // }
 }
