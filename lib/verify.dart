@@ -58,9 +58,15 @@ class _VerifyState extends State<Verify> {
                           ));
                         }
                       },
-                      child: Text(
-                        "Send OTP",
-                        style: GoogleFonts.openSans(color: blue),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            "Send OTP",
+                            style: GoogleFonts.openSans(
+                                color: blue, fontWeight: FontWeight.w700),
+                          ),
+                        ],
                       )),
                 ],
               ),

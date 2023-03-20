@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'constants.dart';
 import 'package:flutter/material.dart';
 
+import 'forgotPassword.dart';
 import 'homePage.dart';
 
 class SignIn extends StatefulWidget {
@@ -117,6 +118,18 @@ class _SignInState extends State<SignIn> {
             onTap: (() {
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Verify()));
+            }),
+          ),
+          GestureDetector(
+            child: Container(
+                margin: EdgeInsets.symmetric(vertical: h / 100),
+                child: Text(
+                  "forgot password!",
+                  style: GoogleFonts.openSans(color: blue, fontSize: 16),
+                )),
+            onTap: (() {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ForgotPassword()));
             }),
           )
         ],
