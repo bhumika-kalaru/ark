@@ -1,3 +1,4 @@
+import 'package:ark/addEvent.dart';
 import 'package:ark/location.dart';
 import 'package:ark/logIn.dart';
 import 'package:ark/pickFile.dart';
@@ -33,7 +34,7 @@ class _MainScreenState extends State<MainScreen> {
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [Location(), FilePick()],
+            children: [Location(), FilePick(), EventButton()],
           ),
         ),
       ),
