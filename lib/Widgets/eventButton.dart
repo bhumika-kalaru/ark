@@ -1,3 +1,4 @@
+import 'package:ark/Screens/eventScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -23,7 +24,10 @@ class EventButton extends StatelessWidget {
             style: GoogleFonts.openSans(
                 color: white, fontSize: 20, fontWeight: FontWeight.w600),
           ))),
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => EventScreen()));
+      },
     );
   }
 }
