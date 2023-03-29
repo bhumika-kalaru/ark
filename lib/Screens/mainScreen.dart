@@ -1,4 +1,4 @@
-import 'package:ark/Widgets/addEvent.dart';
+import 'package:ark/Widgets/eventButton.dart';
 import 'package:ark/Widgets/location.dart';
 import 'package:ark/Login/logIn.dart';
 import 'package:ark/Widgets/pickFile.dart';
