@@ -1,6 +1,8 @@
 import 'package:ark/Widgets/addEvent.dart';
+import 'package:ark/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class EventScreen extends StatefulWidget {
   const EventScreen({super.key});
@@ -10,42 +12,107 @@ class EventScreen extends StatefulWidget {
 }
 
 class _EventScreenState extends State<EventScreen> {
-  TimeOfDay? time = const TimeOfDay(hour: 9, minute: 22);
+  TimeOfDay? timeOfDay = const TimeOfDay(hour: 9, minute: 22);
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height,
         w = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: w / 20, vertical: h / 40),
-        child: Column(
-          children: [
-            GestureDetector(
-              child: Container(
-                child: Text("hello"),
-              ),
-              onTap: () {},
-            )
-          ],
-        ),
+      body: Stack(
+        children: [
+          Container(
+            color: Colors.white,
+            child: StreamBuilder<List<Time>>(
+              stream: readUsers(),
+              builder: ((context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Something went wrong! ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  final times = snapshot.data!;
+                  return ListView(
+                    children: times.map(buildTime).toList(),
+                  );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.timer),
         onPressed: () async {
           TimeOfDay? newTime =
-              await showTimePicker(context: context, initialTime: time!);
+              await showTimePicker(context: context, initialTime: timeOfDay!);
           if (newTime != null) {
             setState(() {
-              time = newTime;
+              timeOfDay = newTime;
               createUser(
-                  hours: time!.hour.toString(),
-                  minutes: time!.minute.toString(),
-                  am: time!.hourOfPeriod.toInt().isOdd);
+                  hours: timeOfDay!.hour.toString(),
+                  minutes: timeOfDay!.minute.toString(),
+                  am: timeOfDay!.hourOfPeriod.toInt().isOdd);
             });
           }
         },
       ),
+    );
+  }
+
+  Widget buildTime(Time time) {
+    return GestureDetector(
+      child: Container(
+        margin: EdgeInsets.all(15),
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: white,
+            boxShadow: blueShadow,
+            borderRadius: BorderRadius.circular(30)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Center(
+                child: Text(
+              time.hours + " : " + time.minutes + (time.am ? " pm" : " am"),
+              style:
+                  GoogleFonts.lato(fontSize: 20, fontWeight: FontWeight.w600),
+            )),
+            Container(
+              alignment: Alignment.centerRight,
+              // child: IconButton(
+              //     onPressed: () {
+              //       setState(() {
+              //         final doc = FirebaseFirestore.instance
+              //             .collection('time')
+              //             .doc(time.id);
+              //         doc.delete();
+              //       });
+              //     },
+              //     icon: Icon(Icons.cancel)),
+            )
+          ],
+        ),
+      ),
+      onTap: () async {
+        TimeOfDay showtime = TimeOfDay(
+            hour: int.parse(time.hours), minute: int.parse(time.minutes));
+        TimeOfDay? newTime =
+            await showTimePicker(context: context, initialTime: showtime!);
+        if (newTime != null) {
+          setState(() {
+            showtime = newTime;
+            FirebaseFirestore.instance.collection('time').doc(time.id).update({
+              'hours': showtime.hour.toString(),
+              'minutes': showtime.minute.toString(),
+              'am': showtime.hourOfPeriod,
+            });
+          });
+        }
+      },
     );
   }
 
