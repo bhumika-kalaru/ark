@@ -1,13 +1,13 @@
-import 'package:ark/mainScreen.dart';
-import 'package:ark/signUp.dart';
-import 'package:ark/verify.dart';
+import 'package:ark/Screens/mainScreen.dart';
+import 'package:ark/Login/signUp.dart';
+import 'package:ark/Login/verify.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'constants.dart';
+import '../constants.dart';
 import 'package:flutter/material.dart';
 
 import 'forgotPassword.dart';
-import 'homePage.dart';
+import '../Screens/homePage.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});

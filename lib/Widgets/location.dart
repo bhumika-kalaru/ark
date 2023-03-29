@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:ark/showLocation.dart';
+import 'package:ark/Screens/showLocation.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'constants.dart';
+import '../constants.dart';
 
 class Location extends StatefulWidget {
   const Location({super.key});

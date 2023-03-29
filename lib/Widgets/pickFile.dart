@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
-import 'constants.dart';
+import '../constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FilePick extends StatefulWidget {

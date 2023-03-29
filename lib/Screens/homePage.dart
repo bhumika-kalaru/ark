@@ -1,12 +1,12 @@
-import 'package:ark/logIn.dart';
-import 'package:ark/verify.dart';
+import 'package:ark/Login/logIn.dart';
+import 'package:ark/Login/verify.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:matcher/matcher.dart';
-import 'constants.dart';
+import '../constants.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

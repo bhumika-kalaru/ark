@@ -1,10 +1,10 @@
-import 'package:ark/addEvent.dart';
-import 'package:ark/location.dart';
-import 'package:ark/logIn.dart';
-import 'package:ark/pickFile.dart';
+import 'package:ark/Widgets/addEvent.dart';
+import 'package:ark/Widgets/location.dart';
+import 'package:ark/Login/logIn.dart';
+import 'package:ark/Widgets/pickFile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'constants.dart';
+import '../constants.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {

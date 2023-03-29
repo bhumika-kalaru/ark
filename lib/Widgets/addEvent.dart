@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'constants.dart';
+import '../constants.dart';
 
 class EventButton extends StatelessWidget {
   const EventButton({super.key});

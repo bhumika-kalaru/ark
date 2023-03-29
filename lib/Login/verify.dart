@@ -1,9 +1,9 @@
-import 'package:ark/signUp.dart';
+import 'package:ark/Login/signUp.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'constants.dart';
+import '../constants.dart';
 
 class Verify extends StatefulWidget {
   const Verify({Key? key}) : super(key: key);

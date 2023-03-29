@@ -1,13 +1,13 @@
-import 'package:ark/homePage.dart';
-import 'package:ark/mainScreen.dart';
-import 'package:ark/location.dart';
-import 'package:ark/logIn.dart';
-import 'package:ark/pickFile.dart';
+import 'package:ark/Screens/homePage.dart';
+import 'package:ark/Screens/mainScreen.dart';
+import 'package:ark/Widgets/location.dart';
+import 'package:ark/Login/logIn.dart';
+import 'package:ark/Widgets/pickFile.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:ark/verify.dart';
+import 'package:ark/Login/verify.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'signIn.dart';
+import 'Login/signIn.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
