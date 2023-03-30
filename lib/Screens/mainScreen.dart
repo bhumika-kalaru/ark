@@ -1,3 +1,4 @@
+import 'package:ark/Screens/profile.dart';
 import 'package:ark/Widgets/eventButton.dart';
 import 'package:ark/Widgets/location.dart';
 import 'package:ark/Login/logIn.dart';
@@ -18,6 +19,17 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+          child: ListView(children: [
+        ListTile(
+          tileColor: white,
+          title: Center(child: Text('Account')),
+          onTap: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => profile()));
+          },
+        ),
+      ])),
       appBar: AppBar(actions: [
         IconButton(
             onPressed: () async {

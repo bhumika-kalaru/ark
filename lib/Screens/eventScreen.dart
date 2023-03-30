@@ -12,11 +12,11 @@ class EventScreen extends StatefulWidget {
 }
 
 class _EventScreenState extends State<EventScreen> {
-  TimeOfDay? timeOfDay = const TimeOfDay(hour: 9, minute: 22);
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height,
         w = MediaQuery.of(context).size.width;
+    TimeOfDay? timeOfDay = const TimeOfDay(hour: 9, minute: 22);
     return Scaffold(
       appBar: AppBar(),
       body: Stack(
@@ -63,56 +63,73 @@ class _EventScreenState extends State<EventScreen> {
   }
 
   Widget buildTime(Time time) {
-    return GestureDetector(
-      child: Container(
-        margin: EdgeInsets.all(15),
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            color: white,
-            boxShadow: blueShadow,
-            borderRadius: BorderRadius.circular(30)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Center(
-                child: Text(
-              time.hours + " : " + time.minutes + (time.am ? " pm" : " am"),
-              style:
-                  GoogleFonts.lato(fontSize: 20, fontWeight: FontWeight.w600),
-            )),
-            Container(
-              alignment: Alignment.centerRight,
-              // child: IconButton(
-              //     onPressed: () {
-              //       setState(() {
-              //         final doc = FirebaseFirestore.instance
-              //             .collection('time')
-              //             .doc(time.id);
-              //         doc.delete();
-              //       });
-              //     },
-              //     icon: Icon(Icons.cancel)),
-            )
-          ],
-        ),
+    return Container(
+      margin: EdgeInsets.all(15),
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          color: white,
+          boxShadow: blueShadow,
+          borderRadius: BorderRadius.circular(30)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          GestureDetector(
+            child: Container(
+              color: Colors.lightBlue,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                      child: Text(
+                    time.hours.padLeft(2, '0') +
+                        " : " +
+                        // ((((int.tryParse(time.minutes))!/10)=0)?'0':'' )+
+                        time.minutes.padLeft(2, '0'),
+                    // +(time.am ? " am" : " pm"),
+                    style: GoogleFonts.lato(
+                        fontSize: 20, fontWeight: FontWeight.w600),
+                  )),
+                ],
+              ),
+            ),
+            onTap: () async {
+              TimeOfDay showtime = TimeOfDay(
+                  hour: int.parse(time.hours), minute: int.parse(time.minutes));
+              TimeOfDay? newTime = await showTimePicker(
+                  context: context, initialTime: showtime!);
+              if (newTime != null) {
+                showtime = newTime;
+                setState(() async {
+                  await FirebaseFirestore.instance
+                      .collection('time')
+                      .doc(time.id)
+                      .set({
+                    'hours': showtime.hour.toString(),
+                    'minutes': showtime.minute.toString(),
+                    'am': showtime.hourOfPeriod,
+                  });
+                });
+              }
+            },
+          ),
+          Container(
+            alignment: Alignment.centerRight,
+            child: IconButton(
+                iconSize: 25,
+                onPressed: () {
+                  // print('object');
+                  // setState(() async {
+                  final doc = FirebaseFirestore.instance
+                      .collection('time')
+                      .doc(time.id);
+                  doc.delete();
+                  // });
+                },
+                icon: const Icon(Icons.cancel)),
+          )
+        ],
       ),
-      onTap: () async {
-        TimeOfDay showtime = TimeOfDay(
-            hour: int.parse(time.hours), minute: int.parse(time.minutes));
-        TimeOfDay? newTime =
-            await showTimePicker(context: context, initialTime: showtime!);
-        if (newTime != null) {
-          setState(() {
-            showtime = newTime;
-            FirebaseFirestore.instance.collection('time').doc(time.id).update({
-              'hours': showtime.hour.toString(),
-              'minutes': showtime.minute.toString(),
-              'am': showtime.hourOfPeriod,
-            });
-          });
-        }
-      },
     );
   }
 
