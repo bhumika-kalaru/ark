@@ -1,3 +1,4 @@
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:ark/Widgets/addEvent.dart';
 import 'package:ark/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,6 +14,7 @@ class EventScreen extends StatefulWidget {
 
 class _EventScreenState extends State<EventScreen> {
   TimeOfDay? timeOfDay = const TimeOfDay(hour: 9, minute: 22);
+  int alarmID = 1;
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height,
@@ -48,15 +50,23 @@ class _EventScreenState extends State<EventScreen> {
         onPressed: () async {
           TimeOfDay? newTime =
               await showTimePicker(context: context, initialTime: timeOfDay!);
+          DateTime alarm = DateTime(2023);
           if (newTime != null) {
             setState(() {
               timeOfDay = newTime;
-              createUser(
+              int y = 2023,
+                  m = 4,
+                  d = 2,
+                  h = timeOfDay!.hour,
+                  mi = timeOfDay!.minute;
+              createAlarm(
                   // label: label,
                   hours: timeOfDay!.hour.toString(),
                   minutes: timeOfDay!.minute.toString(),
                   am: timeOfDay!.hourOfPeriod.toInt().isOdd);
+              alarm = DateTime(y, m, d, h, mi, 0);
             });
+            AndroidAlarmManager.oneShotAt(alarm, alarmID, fireAlarm);
           }
         },
       ),
@@ -130,7 +140,10 @@ class _EventScreenState extends State<EventScreen> {
                   doc.delete();
                   // });
                 },
-                icon: const Icon(Icons.cancel)),
+                icon: const Icon(
+                  Icons.close,
+                  color: Colors.red,
+                )),
           )
         ],
       ),
@@ -143,7 +156,7 @@ class _EventScreenState extends State<EventScreen> {
       .map((snapshot) =>
           snapshot.docs.map((doc) => Time.fromJson(doc.data())).toList());
 
-  Future createUser(
+  Future createAlarm(
       {required String hours,
       // required String label,
       required String minutes,
@@ -177,6 +190,16 @@ class Time {
         am: json['am'],
         hours: json['hours'],
         minutes: json['minutes'],
-        // label: json['label']
       );
+}
+
+void fireAlarm() {
+  AlertDialog(
+    content: Stack(children: [
+      Container(
+        child: Text("Alarm"),
+      )
+    ]),
+  );
+  print("Alarm");
 }
