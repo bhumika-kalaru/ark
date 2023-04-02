@@ -52,6 +52,7 @@ class _EventScreenState extends State<EventScreen> {
             setState(() {
               timeOfDay = newTime;
               createUser(
+                  // label: label,
                   hours: timeOfDay!.hour.toString(),
                   minutes: timeOfDay!.minute.toString(),
                   am: timeOfDay!.hourOfPeriod.toInt().isOdd);
@@ -75,7 +76,7 @@ class _EventScreenState extends State<EventScreen> {
         children: [
           GestureDetector(
             child: Container(
-              color: Colors.lightBlue,
+              // color: Colors.lightBlue,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -141,10 +142,12 @@ class _EventScreenState extends State<EventScreen> {
 
   Future createUser(
       {required String hours,
+      // required String label,
       required String minutes,
       required bool am}) async {
     final docUser = FirebaseFirestore.instance.collection('time').doc();
     final time = Time(id: docUser.id, hours: hours, am: am, minutes: minutes);
+    // , label: label);
     final json = time.toJson();
     await docUser.set(json);
   }
@@ -153,19 +156,23 @@ class _EventScreenState extends State<EventScreen> {
 class Time {
   late String id;
   final String hours, minutes;
+  // label;
   final bool am;
   Time(
       {this.id = '',
       required this.am,
+      // required this.label,
       required this.hours,
       required this.minutes});
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'hours': hours,
-        'minutes': minutes,
-        'am': am,
+        'id': id, 'hours': hours, 'minutes': minutes, 'am': am
+        // , 'label': label
       };
-  static Time fromJson(Map<String, dynamic> json) =>
-      Time(am: json['am'], hours: json['hours'], minutes: json['minutes']);
+  static Time fromJson(Map<String, dynamic> json) => Time(
+        am: json['am'],
+        hours: json['hours'],
+        minutes: json['minutes'],
+        // label: json['label']
+      );
 }

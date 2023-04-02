@@ -49,6 +49,7 @@ dependencies:
   file_picker:
   geolocator:
   pdf_viewer_plugin: ^2.0.1
+  google_sign_in: ^6.0.2
 
 dev_dependencies:
   flutter_test:

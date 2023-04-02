@@ -68,28 +68,44 @@ class _SignInState extends State<SignIn> {
                     color: blue, borderRadius: BorderRadius.circular(10)),
               ),
               onTap: () async {
-                try {
-                  UserCredential userCredential = await FirebaseAuth.instance
-                      .signInWithEmailAndPassword(
-                          email: emailController.text,
-                          password: passwordController.text);
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => MainScreen()),
-                    (Route<dynamic> route) => false,
-                  );
-                } on FirebaseAuthException catch (e) {
-                  if (e.code == 'user-not-found') {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text("No user found for that email."),
-                      backgroundColor: Colors.red,
-                    ));
-                    print('No user found for that email.');
-                  } else if (e.code == 'wrong-password') {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text("Wrong Password"),
-                      backgroundColor: Colors.red,
-                    ));
+                int size = emailController.text.length, flag = 1, j = 0;
+                String s = "iiita.ac.in",
+                    email = emailController.text.toString();
+                for (int i = size - 11; i < size; i++) {
+                  if (s[j] != email[i]) {
+                    flag = 0;
+                  }
+                  j++;
+                }
+                if (flag == 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text("Email doesn't belong to the community"),
+                    backgroundColor: Colors.red,
+                  ));
+                } else {
+                  try {
+                    UserCredential userCredential = await FirebaseAuth.instance
+                        .signInWithEmailAndPassword(
+                            email: emailController.text,
+                            password: passwordController.text);
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => MainScreen()),
+                      (Route<dynamic> route) => false,
+                    );
+                  } on FirebaseAuthException catch (e) {
+                    if (e.code == 'user-not-found') {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("No user found for that email."),
+                        backgroundColor: Colors.red,
+                      ));
+                      print('No user found for that email.');
+                    } else if (e.code == 'wrong-password') {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Wrong Password"),
+                        backgroundColor: Colors.red,
+                      ));
+                    }
                   }
                 }
               }
