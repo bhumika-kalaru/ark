@@ -194,12 +194,5 @@ class Time {
 }
 
 void fireAlarm() {
-  AlertDialog(
-    content: Stack(children: [
-      Container(
-        child: Text("Alarm"),
-      )
-    ]),
-  );
   print("Alarm");
 }
