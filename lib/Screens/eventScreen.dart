@@ -88,8 +88,8 @@ class _EventScreenState extends State<EventScreen> {
                     await FirebaseFirestore.instance
                         .collection('time')
                         .doc(time.id)
-                        .set({
-                      'id': time.id,
+                        .update({
+                      // 'id': time.id,
                       'hours': showtime.hour.toString(),
                       'minutes': showtime.minute.toString(),
                       'am': showtime.hourOfPeriod.toInt().isOdd,
@@ -110,7 +110,7 @@ class _EventScreenState extends State<EventScreen> {
                           time.minutes.padLeft(2, '0'),
                       // +(time.am ? " am" : " pm"),
                       style: GoogleFonts.lato(
-                          fontSize: 20, fontWeight: FontWeight.w600),
+                          fontSize: 20, fontWeight: FontWeight.w800),
                     )),
                   ],
                 ),
