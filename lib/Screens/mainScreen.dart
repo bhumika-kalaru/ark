@@ -5,6 +5,10 @@ import 'package:ark/Widgets/location.dart';
 import 'package:ark/Login/logIn.dart';
 import 'package:ark/Widgets/pickFile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
+import 'package:sound_mode/permission_handler.dart';
+import 'package:sound_mode/sound_mode.dart';
+import 'package:sound_mode/utils/ringer_mode_statuses.dart';
 
 import '../constants.dart';
 import 'package:flutter/material.dart';
@@ -69,6 +73,25 @@ class _MainScreenState extends State<MainScreen> {
           onTap: () {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => ForgotPassword()));
+          },
+        ),
+        ListTile(
+          tileColor: white,
+          title: Center(child: Text('Change to normal mode')),
+          onTap: () async {
+            bool? isGranted = await PermissionHandler.permissionsGranted;
+            print(SoundMode.ringerModeStatus);
+            print("hello");
+            if (!isGranted!) {
+              // Opens the Do Not Disturb Access settings to grant the access
+              await PermissionHandler.openDoNotDisturbSetting();
+            } else {
+              try {
+                await SoundMode.setSoundMode(RingerModeStatus.normal);
+              } on PlatformException {
+                print('Please enable permissions required');
+              }
+            }
           },
         ),
       ])),

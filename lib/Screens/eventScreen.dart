@@ -3,7 +3,11 @@ import 'package:ark/Widgets/addEvent.dart';
 import 'package:ark/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sound_mode/permission_handler.dart';
+import 'package:sound_mode/sound_mode.dart';
+import 'package:sound_mode/utils/ringer_mode_statuses.dart';
 
 class EventScreen extends StatefulWidget {
   const EventScreen({super.key});
@@ -52,7 +56,20 @@ class _EventScreenState extends State<EventScreen> {
               await showTimePicker(context: context, initialTime: timeOfDay!);
           DateTime alarm = DateTime(2023);
           if (newTime != null) {
-            setState(() {
+            setState(() async {
+              bool? isGranted = await PermissionHandler.permissionsGranted;
+              print(SoundMode.ringerModeStatus);
+              print("hello");
+              if (!isGranted!) {
+                // Opens the Do Not Disturb Access settings to grant the access
+                await PermissionHandler.openDoNotDisturbSetting();
+              } else {
+                try {
+                  await SoundMode.setSoundMode(RingerModeStatus.silent);
+                } on PlatformException {
+                  print('Please enable permissions required');
+                }
+              }
               timeOfDay = newTime;
               int y = 2023,
                   m = 4,
