@@ -32,7 +32,7 @@ class _SignInState extends State<SignIn> {
         w = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Sign in screen"),
+        title: Text("Log in "),
         centerTitle: true,
       ),
       body: Column(

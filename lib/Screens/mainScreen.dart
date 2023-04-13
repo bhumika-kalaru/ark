@@ -1,4 +1,5 @@
 import 'package:ark/Login/forgotPassword.dart';
+import 'package:ark/Screens/myLocations.dart';
 import 'package:ark/Screens/profile.dart';
 import 'package:ark/Widgets/eventButton.dart';
 import 'package:ark/Widgets/location.dart';
@@ -92,6 +93,14 @@ class _MainScreenState extends State<MainScreen> {
                 print('Please enable permissions required');
               }
             }
+          },
+        ),
+        ListTile(
+          tileColor: white,
+          title: Center(child: Text('Location')),
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => MyLocations()));
           },
         ),
       ])),
