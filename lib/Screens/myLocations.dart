@@ -1,10 +1,12 @@
+import 'package:ark/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MyLocations extends StatelessWidget {
-  // const MyLocations({super.key});
   late String lat, long;
+  // const MyLocations({super.key});
 
   Future<Position> _getLocation() async {
     bool servicePermission = await Geolocator.isLocationServiceEnabled();
@@ -61,6 +63,10 @@ class MyLocations extends StatelessWidget {
               addLocation(latitude: lat, longitude: long);
             }));
           },
+          child: Icon(
+            Icons.add,
+            size: 32,
+          ),
         ),
       ),
     );
@@ -68,7 +74,41 @@ class MyLocations extends StatelessWidget {
 
   Widget buildLocation(location current) {
     return Container(
-      child: Text(current.latitude + current.longitude),
+      margin: EdgeInsets.all(15),
+      padding: EdgeInsets.all(20),
+      height: 100,
+      decoration: BoxDecoration(
+          color: white,
+          boxShadow: blueShadow,
+          borderRadius: BorderRadius.circular(30)),
+      child: Center(
+          child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                current.latitude,
+                style: GoogleFonts.overpass(fontSize: 20),
+              ),
+              Text(current.longitude,
+                  style: GoogleFonts.overpass(fontSize: 20)),
+            ],
+          ),
+          IconButton(
+              onPressed: () {
+                final doc = FirebaseFirestore.instance
+                    .collection('Location')
+                    .doc(current.id);
+                doc.delete();
+              },
+              icon: Icon(
+                Icons.close,
+                color: Colors.red,
+              ))
+        ],
+      )),
     );
   }
 
