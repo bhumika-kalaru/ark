@@ -46,7 +46,8 @@ dependencies:
   email_otp:
   permission_handler:
   internet_connection_checker:
-  flutter_background: ^1.2.0
+  # flutter_background: ^1.2.0
+  flutter_background_service: ^2.4.6
   geolocator:
   pdf_viewer_plugin: ^2.0.1
   google_sign_in: ^6.0.2
