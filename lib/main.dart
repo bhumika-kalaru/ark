@@ -2,18 +2,21 @@ import 'package:ark/Screens/homePage.dart';
 import 'package:ark/Screens/mainScreen.dart';
 import 'package:ark/Widgets/location.dart';
 import 'package:ark/Login/logIn.dart';
+import 'package:ark/back_services.dart';
 import 'package:ark/Widgets/pickFile.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:ark/Login/verify.dart';
+import 'package:background_service/background_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'Login/signIn.dart';
-import 'package:ark/backgroundFetch.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // registerBackground();
+  // initializeService();
+  BackgroundService().sendData(action: "setAsBackground");
   await Firebase.initializeApp();
   await AndroidAlarmManager.initialize();
   runApp(MyApp());
