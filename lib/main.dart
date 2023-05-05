@@ -8,10 +8,12 @@ import 'package:ark/Login/verify.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'Login/signIn.dart';
+import 'package:ark/backgroundFetch.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // registerBackground();
   await Firebase.initializeApp();
   await AndroidAlarmManager.initialize();
   runApp(MyApp());

@@ -10,6 +10,7 @@ class ShowLocation extends StatelessWidget {
     double h = MediaQuery.of(context).size.height,
         w = (MediaQuery.of(context).size.height);
     return Scaffold(
+      appBar: AppBar(),
       body: Container(
           child: Center(
         child: Column(
