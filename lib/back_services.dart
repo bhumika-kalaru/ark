@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:background_service/background_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
@@ -34,62 +35,63 @@ Future<Position> _getLocation() async {
 void onStart() {
   WidgetsFlutterBinding.ensureInitialized();
   print("backgrounfunctionstart");
-
   final service = BackgroundService();
   service.onDataReceived.listen((event) {
-    late String lat, long;
-    _getLocation().then(((value) async {
-      lat = '${value.latitude}';
-      long = '${value.longitude}';
-      bool? isGranted = await PermissionHandler.permissionsGranted;
-      try {
-        if (!isGranted!) {
-          // Opens the Do Not Disturb Access settings to grant the access
-          await PermissionHandler.openDoNotDisturbSetting();
-        } else {
-          String? lati, longi;
-          var document =
-              await FirebaseFirestore.instance.collection('Location');
-          var all = await document.get();
-          var firstId = all.docs.first.id;
-          var document2 = (await FirebaseFirestore.instance
-              .collection('Location')
-              .doc(firstId)
-              .get());
-          if (document2.exists) {
-            Map<String, dynamic>? data = document2.data();
-            lati = data?['latitude'];
-            longi = data?['longitude'];
-            print("exists");
-            print(lat);
-            print(" ");
-            print(lati);
-          }
-
-          double distanceInMeters = Geolocator.distanceBetween(
-              double.parse(lat),
-              double.parse(long),
-              double.parse(lati!),
-              double.parse(longi!));
-          //   print(distanceInMeters);
-          if (distanceInMeters < 100) {
-            await SoundMode.setSoundMode(RingerModeStatus.silent);
-          }
-        }
-      } on PlatformException {
-        print('Please enable permissions required');
-      }
-      // });
-    }));
     if (event!["action"] == "setAsBackground") {
       service.setForegroundMode(false);
     }
     service.setForegroundMode(true);
-    Timer.periodic(Duration(minutes: 1), (timer) async {
+    Timer.periodic(Duration(seconds: 20), (timer) async {
+      late String lat, long;
+      await Firebase.initializeApp();
+      _getLocation().then(((value) async {
+        print("get location start");
+        lat = '${value.latitude}';
+        long = '${value.longitude}';
+        bool? isGranted = await PermissionHandler.permissionsGranted;
+        try {
+          if (!isGranted!) {
+            // Opens the Do Not Disturb Access settings to grant the access
+            await PermissionHandler.openDoNotDisturbSetting();
+          } else {
+            String? lati, longi;
+            var document =
+                await FirebaseFirestore.instance.collection('Location');
+            var all = await document.get();
+            var firstId = all.docs.first.id;
+            var document2 = (await FirebaseFirestore.instance
+                .collection('Location')
+                .doc(firstId)
+                .get());
+            if (document2.exists) {
+              Map<String, dynamic>? data = document2.data();
+              lati = data?['latitude'];
+              longi = data?['longitude'];
+              print("exists");
+              print(lat);
+              print(" ");
+              print(lati);
+            }
+
+            double distanceInMeters = Geolocator.distanceBetween(
+                double.parse(lat),
+                double.parse(long),
+                double.parse(lati!),
+                double.parse(longi!));
+            //   print(distanceInMeters);
+            if (distanceInMeters < 100) {
+              await SoundMode.setSoundMode(RingerModeStatus.silent);
+            }
+          }
+        } on PlatformException {
+          print('Please enable permissions required');
+        }
+        // });
+      }));
       if (!(await service.isServiceRunning())) timer.cancel();
     });
     service.setNotificationInfo(
-      title: "My App Service",
+      title: "Ark Running in background",
       content: "Updated at ${DateTime.now()}",
     );
 
