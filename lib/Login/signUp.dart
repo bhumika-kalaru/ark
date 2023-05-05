@@ -2,6 +2,7 @@ import 'package:ark/Screens/mainScreen.dart';
 import 'package:ark/Login/signIn.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sound_mode/permission_handler.dart';
 import '../constants.dart';
 import 'package:flutter/material.dart';
 import 'package:email_otp/email_otp.dart';
@@ -62,8 +63,13 @@ class _SignUpState extends State<SignUp> {
               decoration: BoxDecoration(
                   color: blue, borderRadius: BorderRadius.circular(10)),
             ),
-            onTap: () {
-              setState(() {
+            onTap: () async {
+              setState(() async {
+                bool? isGranted = await PermissionHandler.permissionsGranted;
+                if (!isGranted!) {
+                  // Opens the Do Not Disturb Access settings to grant the access
+                  await PermissionHandler.openDoNotDisturbSetting();
+                }
                 signUp();
                 Navigator.pushAndRemoveUntil(
                   context,

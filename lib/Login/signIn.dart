@@ -3,6 +3,7 @@ import 'package:ark/Login/signUp.dart';
 import 'package:ark/Login/verify.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sound_mode/permission_handler.dart';
 import '../constants.dart';
 import 'package:flutter/material.dart';
 
@@ -68,6 +69,11 @@ class _SignInState extends State<SignIn> {
                     color: blue, borderRadius: BorderRadius.circular(10)),
               ),
               onTap: () async {
+                bool? isGranted = await PermissionHandler.permissionsGranted;
+                if (!isGranted!) {
+                  // Opens the Do Not Disturb Access settings to grant the access
+                  await PermissionHandler.openDoNotDisturbSetting();
+                }
                 int size = emailController.text.length, flag = 1, j = 0;
                 String s = "iiita.ac.in",
                     email = emailController.text.toString();

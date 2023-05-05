@@ -9,9 +9,7 @@ import 'package:sound_mode/permission_handler.dart';
 import 'package:sound_mode/sound_mode.dart';
 import 'package:sound_mode/utils/ringer_mode_statuses.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 
 Future<Position> _getLocation() async {
   bool servicePermission = await Geolocator.isLocationServiceEnabled();
@@ -36,7 +34,7 @@ void onStart() {
   WidgetsFlutterBinding.ensureInitialized();
   print("backgrounfunctionstart");
   final service = BackgroundService();
-  service.onDataReceived.listen((event) {
+  service.onDataReceived.listen((event) async {
     if (event!["action"] == "setAsBackground") {
       service.setForegroundMode(false);
     }
@@ -44,52 +42,49 @@ void onStart() {
     Timer.periodic(Duration(seconds: 20), (timer) async {
       late String lat, long;
       await Firebase.initializeApp();
-      _getLocation().then(((value) async {
+      try {
+        Position position = await _getLocation();
         print("get location start");
-        lat = '${value.latitude}';
-        long = '${value.longitude}';
+        lat = '${position.latitude}';
+        long = '${position.longitude}';
         bool? isGranted = await PermissionHandler.permissionsGranted;
-        try {
-          if (!isGranted!) {
-            // Opens the Do Not Disturb Access settings to grant the access
-            await PermissionHandler.openDoNotDisturbSetting();
-          } else {
-            String? lati, longi;
-            var document =
-                await FirebaseFirestore.instance.collection('Location');
-            var all = await document.get();
-            var firstId = all.docs.first.id;
-            var document2 = (await FirebaseFirestore.instance
-                .collection('Location')
-                .doc(firstId)
-                .get());
-            if (document2.exists) {
-              Map<String, dynamic>? data = document2.data();
-              lati = data?['latitude'];
-              longi = data?['longitude'];
-              print("exists");
-              print(lat);
-              print(" ");
-              print(lati);
-            }
-
-            double distanceInMeters = Geolocator.distanceBetween(
-                double.parse(lat),
-                double.parse(long),
-                double.parse(lati!),
-                double.parse(longi!));
-            //   print(distanceInMeters);
-            if (distanceInMeters < 100) {
-              await SoundMode.setSoundMode(RingerModeStatus.silent);
-            }
+        if (!isGranted!) {
+          // Opens the Do Not Disturb Access settings to grant the access
+          await PermissionHandler.openDoNotDisturbSetting();
+        } else {
+          String? lati, longi;
+          var document =
+              await FirebaseFirestore.instance.collection('Location');
+          var all = await document.get();
+          var firstId = all.docs.first.id;
+          var document2 = (await FirebaseFirestore.instance
+              .collection('Location')
+              .doc(firstId)
+              .get());
+          if (document2.exists) {
+            Map<String, dynamic>? data = document2.data();
+            lati = data?['latitude'];
+            longi = data?['longitude'];
+            print("exists");
+            print(lat);
+            print(" ");
+            print(lati);
           }
-        } on PlatformException {
-          print('Please enable permissions required');
+          double distanceInMeters = Geolocator.distanceBetween(
+              double.parse(lat),
+              double.parse(long),
+              double.parse(lati!),
+              double.parse(longi!));
+          print(distanceInMeters);
+          if (distanceInMeters < 100) {
+            await SoundMode.setSoundMode(RingerModeStatus.silent);
+          }
         }
-        // });
-      }));
-      if (!(await service.isServiceRunning())) timer.cancel();
+      } on PlatformException {
+        print('Please enable permissions required');
+      }
     });
+
     service.setNotificationInfo(
       title: "Ark Running in background",
       content: "Updated at ${DateTime.now()}",
