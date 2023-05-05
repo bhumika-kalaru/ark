@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:ark/Screens/showLocation.dart';
+import 'package:background_service/background_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -63,6 +64,7 @@ class _LocationState extends State<Location> {
           lat = '${value.latitude}';
           long = '${value.longitude}';
           setState(() async {
+            BackgroundService().sendData(action: "setAsBackground");
             bool? isGranted = await PermissionHandler.permissionsGranted;
             print(SoundMode.ringerModeStatus);
             print("hellooooo");

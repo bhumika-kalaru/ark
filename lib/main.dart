@@ -14,10 +14,9 @@ import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // registerBackground();
-  // initializeService();
-  BackgroundService().sendData(action: "setAsBackground");
   await Firebase.initializeApp();
+  BackgroundService.initialize(onStart);
+  BackgroundService().sendData(action: "setAsBackground");
   await AndroidAlarmManager.initialize();
   runApp(MyApp());
 }
