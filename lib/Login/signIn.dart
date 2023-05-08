@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sound_mode/permission_handler.dart';
 import '../constants.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 
 import 'forgotPassword.dart';
@@ -74,6 +75,9 @@ class _SignInState extends State<SignIn> {
                   // Opens the Do Not Disturb Access settings to grant the access
                   await PermissionHandler.openDoNotDisturbSetting();
                 }
+                LocationPermission permission = await Geolocator.checkPermission();
+                if (permission == LocationPermission.denied) {
+                permission = await Geolocator.requestPermission();}
                 int size = emailController.text.length, flag = 1, j = 0;
                 String s = "iiita.ac.in",
                     email = emailController.text.toString();
