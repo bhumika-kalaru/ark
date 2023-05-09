@@ -12,6 +12,7 @@ import '../constants.dart';
 import 'package:sound_mode/permission_handler.dart';
 import 'package:sound_mode/sound_mode.dart';
 import 'package:sound_mode/utils/ringer_mode_statuses.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Location extends StatefulWidget {
   const Location({super.key});
@@ -22,6 +23,7 @@ class Location extends StatefulWidget {
 
 class _LocationState extends State<Location> {
   late String lat, long;
+  String? uid = FirebaseAuth.instance.currentUser?.uid;
 
   Future<Position> _getLocation() async {
     bool servicePermission = await Geolocator.isLocationServiceEnabled();
@@ -74,11 +76,15 @@ class _LocationState extends State<Location> {
                 await PermissionHandler.openDoNotDisturbSetting();
               } else {
                 String? lati, longi;
-                var document =
-                    await FirebaseFirestore.instance.collection('Location');
+                var document = await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(uid)
+                    .collection('Location');
                 var all = await document.get();
                 var firstId = all.docs.first.id;
                 var document2 = (await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(uid)
                     .collection('Location')
                     .doc(firstId)
                     .get());
@@ -117,6 +123,8 @@ class _LocationState extends State<Location> {
   }
 
   Stream<List<location>> readUsers() => FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
       .collection('Location')
       .snapshots()
       .map((snapshot) =>
