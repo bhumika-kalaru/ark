@@ -10,7 +10,8 @@ import 'package:sound_mode/sound_mode.dart';
 import 'package:sound_mode/utils/ringer_mode_statuses.dart';
 
 class EventScreen extends StatefulWidget {
-  const EventScreen({super.key});
+  const EventScreen({super.key, required this.userId});
+  final String? userId;
 
   @override
   State<EventScreen> createState() => _EventScreenState();
@@ -113,6 +114,8 @@ class _EventScreenState extends State<EventScreen> {
                   showtime = newTime;
                   setState(() async {
                     await FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(widget.userId)
                         .collection('time')
                         .doc(time.id)
                         .update({
@@ -152,6 +155,8 @@ class _EventScreenState extends State<EventScreen> {
                   // print('object');
                   // setState(() async {
                   final doc = FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(widget.userId)
                       .collection('time')
                       .doc(time.id);
                   doc.delete();
@@ -168,6 +173,8 @@ class _EventScreenState extends State<EventScreen> {
   }
 
   Stream<List<Time>> readUsers() => FirebaseFirestore.instance
+      .collection('users')
+      .doc(widget.userId)
       .collection('time')
       .snapshots()
       .map((snapshot) =>
@@ -178,7 +185,11 @@ class _EventScreenState extends State<EventScreen> {
       // required String label,
       required String minutes,
       required bool am}) async {
-    final docUser = FirebaseFirestore.instance.collection('time').doc();
+    final docUser = FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.userId)
+        .collection('time')
+        .doc();
     final time = Time(id: docUser.id, hours: hours, am: am, minutes: minutes);
     // , label: label);
     final json = time.toJson();

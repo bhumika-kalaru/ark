@@ -1,11 +1,13 @@
 import 'package:ark/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyLocations extends StatelessWidget {
   late String lat, long;
+  String? uid = FirebaseAuth.instance.currentUser?.uid;
   // const MyLocations({super.key});
 
   Future<Position> _getLocation() async {
@@ -31,7 +33,7 @@ class MyLocations extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar:AppBar(),
+        appBar: AppBar(),
         body: Stack(
           children: [
             Container(
@@ -100,6 +102,8 @@ class MyLocations extends StatelessWidget {
           IconButton(
               onPressed: () {
                 final doc = FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(uid)
                     .collection('Location')
                     .doc(current.id);
                 doc.delete();
@@ -114,6 +118,8 @@ class MyLocations extends StatelessWidget {
   }
 
   Stream<List<location>> readUsers() => FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
       .collection('Location')
       .snapshots()
       .map((snapshot) =>
@@ -123,7 +129,11 @@ class MyLocations extends StatelessWidget {
     required String latitude,
     required String longitude,
   }) async {
-    final docLoc = FirebaseFirestore.instance.collection('Location').doc();
+    final docLoc = FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('Location')
+        .doc();
     final loc =
         location(id: docLoc.id, latitude: latitude, longitude: longitude);
     final json = loc.toJson();
