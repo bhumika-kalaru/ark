@@ -1,3 +1,4 @@
+import 'package:ark/Screens/eventScreen.dart';
 import 'package:ark/Screens/mainScreen.dart';
 import 'package:ark/Login/signIn.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -78,7 +79,7 @@ class _SignUpState extends State<SignUp> {
                 signUp();
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => MainScreen()),
+                  MaterialPageRoute(builder: (context) => EventScreen()),
                   (Route<dynamic> route) => false,
                 );
               });

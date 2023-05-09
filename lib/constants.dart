@@ -9,7 +9,8 @@ final gabr = GoogleFonts.gabriela(fontSize: 24);
 final Color? white = Colors.white;
 final Color? blue = Colors.blue;
 final Color? black = Colors.black;
-final Color? maincolour = Color(0xff2B3467);
+// final Color? maincolour = Color(0xff2B3467);
+final Color? maincolour = Color(0xff101d4d);
 // final Color pink = Color(0xffEB455F);
 final Color cream = Color(0xffFCFFE7);
 // 0xff2B3467

@@ -2,6 +2,7 @@ import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:ark/Screens/profile.dart';
 import 'package:ark/Widgets/addEvent.dart';
 import 'package:ark/constants.dart';
+import 'package:ark/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -111,12 +112,10 @@ class _EventScreenState extends State<EventScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.timer),
-        onPressed: () async {
-          TimeOfDay? newTime =
-              await showTimePicker(context: context, initialTime: timeOfDay!);
-          DateTime alarm = DateTime(2023);
-          if (newTime != null) {
+          child: Icon(Icons.timer),
+          onPressed: () async {
+            String description = '';
+            DateTime alarm = DateTime(2023);
             setState(() async {
               bool? isGranted = await PermissionHandler.permissionsGranted;
               print(SoundMode.ringerModeStatus);
@@ -131,23 +130,85 @@ class _EventScreenState extends State<EventScreen> {
                   print('Please enable permissions required');
                 }
               }
-              timeOfDay = newTime;
-              int y = 2023,
-                  m = 4,
-                  d = 2,
-                  h = timeOfDay!.hour,
-                  mi = timeOfDay!.minute;
-              createAlarm(
-                  // label: label,
-                  hours: timeOfDay!.hour.toString(),
-                  minutes: timeOfDay!.minute.toString(),
-                  am: timeOfDay!.hourOfPeriod.toInt().isOdd);
-              alarm = DateTime(y, m, d, h, mi, 0);
+
+              // Show dialog to get the description input
+              String? description;
+
+              await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Enter a description'),
+                    content: TextField(
+                      onChanged: (value) {
+                        description = value;
+                      },
+                    ),
+                    actions: <Widget>[
+                      ElevatedButton(
+                        child: Text('CANCEL'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      ElevatedButton(
+                        child: Text('OK'),
+                        onPressed: () {
+                          if (description != null && description!.isNotEmpty) {
+                            Navigator.of(context).pop();
+                          }
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+
+              if (description != null && description!.isNotEmpty) {
+                // Show date picker to pick a date
+                DateTime? selectedDate = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime(2100),
+                );
+
+                if (selectedDate != null) {
+                  // Show time picker to pick a time
+                  TimeOfDay? selectedTime = await showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay.now(),
+                  );
+
+                  if (selectedTime != null) {
+                    timeOfDay = selectedTime;
+                    int y = selectedDate.year,
+                        m = selectedDate.month,
+                        d = selectedDate.day,
+                        h = timeOfDay!.hour,
+                        mi = timeOfDay!.minute;
+                    createAlarm(
+                      description: description!,
+                      date: selectedDate.day.toString(),
+                      month: selectedDate.month.toString(),
+                      year: selectedDate.year.toString(),
+                      hours: timeOfDay!.hour.toString(),
+                      minutes: timeOfDay!.minute.toString(),
+                    );
+                    alarm = DateTime(y, m, d, h, mi, 0);
+
+                    AndroidAlarmManager.oneShotAt(alarm, alarmID, fireAlarm);
+                  }
+                }
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Please enter a description'),
+                  ),
+                );
+              }
             });
-            AndroidAlarmManager.oneShotAt(alarm, alarmID, fireAlarm);
-          }
-        },
-      ),
+          }),
     );
   }
 
@@ -158,34 +219,138 @@ class _EventScreenState extends State<EventScreen> {
       decoration: BoxDecoration(
           color: white,
           boxShadow: blueShadow,
-          borderRadius: BorderRadius.circular(30)),
+          borderRadius: BorderRadius.circular(15)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
             child: GestureDetector(
               onTap: () async {
-                TimeOfDay showtime = TimeOfDay(
+                TextEditingController _descriptionController =
+                    TextEditingController();
+                DateTime _selectedDate = DateTime.now();
+                TimeOfDay _selectedTime = TimeOfDay.now();
+
+                // Set the initial values of the fields
+                _descriptionController.text = time.description;
+                _selectedDate = DateTime(int.parse(time.year),
+                    int.parse(time.month), int.parse(time.date));
+                _selectedTime = TimeOfDay(
                     hour: int.parse(time.hours),
                     minute: int.parse(time.minutes));
-                TimeOfDay? newTime = await showTimePicker(
-                    context: context, initialTime: showtime!);
-                if (newTime != null) {
-                  showtime = newTime;
-                  setState(() async {
-                    await FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(userId)
-                        .collection('time')
-                        .doc(time.id)
-                        .update({
-                      // 'id': time.id,
-                      'hours': showtime.hour.toString(),
-                      'minutes': showtime.minute.toString(),
-                      'am': showtime.hourOfPeriod.toInt().isOdd,
-                    });
-                  });
-                }
+
+                // Show the dialog to edit the fields
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text(
+                        'Edit Time',
+                        style: GoogleFonts.sourceSansPro(
+                            fontSize: 24, color: pink),
+                      ),
+                      content: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextField(
+                              controller: _descriptionController,
+                              decoration: InputDecoration(
+                                labelText: 'Description',
+                                labelStyle: GoogleFonts.sourceSansPro(
+                                    fontSize: 20, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            ListTile(
+                              title: Text(
+                                'Date',
+                                style: GoogleFonts.sourceSansPro(
+                                    fontSize: 20, fontWeight: FontWeight.w500),
+                              ),
+                              subtitle: Text(
+                                  '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}'),
+                              onTap: () async {
+                                final DateTime? pickedDate =
+                                    await showDatePicker(
+                                  context: context,
+                                  initialDate: _selectedDate,
+                                  firstDate: DateTime.now(),
+                                  lastDate: DateTime(2100),
+                                );
+                                if (pickedDate != null) {
+                                  setState(() {
+                                    _selectedDate = pickedDate;
+                                  });
+                                }
+                              },
+                            ),
+                            ListTile(
+                              title: Text(
+                                'Time',
+                                style: GoogleFonts.sourceSansPro(
+                                    fontSize: 20, fontWeight: FontWeight.w500),
+                              ),
+                              subtitle:
+                                  Text('${_selectedTime.format(context)}'),
+                              onTap: () async {
+                                final TimeOfDay? pickedTime =
+                                    await showTimePicker(
+                                  context: context,
+                                  initialTime: _selectedTime,
+                                );
+                                if (pickedTime != null) {
+                                  setState(() {
+                                    _selectedTime = pickedTime;
+                                  });
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            'Cancel',
+                            style: GoogleFonts.sourceSansPro(
+                                fontSize: 16, color: maincolour),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            // Update the time with the edited values
+                            await FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(userId)
+                                .collection('time')
+                                .doc(time.id)
+                                .update({
+                              'description': _descriptionController.text,
+                              'year': _selectedDate.year.toString(),
+                              'month': _selectedDate.month.toString(),
+                              'date': _selectedDate.day.toString(),
+                              'hours': _selectedTime.hour.toString(),
+                              'minutes': _selectedTime.minute.toString(),
+                            });
+
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            'Save',
+                            style: GoogleFonts.sourceSansPro(
+                                fontSize: 16,
+                                color: pink,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
               },
               child: Container(
                 child: Column(
@@ -240,17 +405,27 @@ class _EventScreenState extends State<EventScreen> {
       .map((snapshot) =>
           snapshot.docs.map((doc) => Time.fromJson(doc.data())).toList());
 
-  Future createAlarm(
-      {required String hours,
-      // required String label,
-      required String minutes,
-      required bool am}) async {
+  Future createAlarm({
+    required String hours,
+    required String minutes,
+    required String description,
+    required String date,
+    required String month,
+    required String year,
+  }) async {
     final docUser = FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
         .collection('time')
         .doc();
-    final time = Time(id: docUser.id, hours: hours, am: am, minutes: minutes);
+    final time = Time(
+        id: docUser.id,
+        hours: hours,
+        date: date,
+        minutes: minutes,
+        description: description,
+        month: month,
+        year: year);
     // , label: label);
     final json = time.toJson();
     await docUser.set(json);
@@ -260,24 +435,34 @@ class _EventScreenState extends State<EventScreen> {
 class Time {
   late String id;
   final String hours, minutes;
-  // label;
-  final bool am;
+  final String date, month, year;
+  final String description;
   Time(
       {this.id = '',
-      required this.am,
-      // required this.label,
+      required this.description,
+      required this.date,
+      required this.month,
+      required this.year,
       required this.hours,
       required this.minutes});
 
   Map<String, dynamic> toJson() => {
-        'id': id, 'hours': hours, 'minutes': minutes, 'am': am
-        // , 'label': label
+        'id': id,
+        'hours': hours,
+        'minutes': minutes,
+        'date': date,
+        'month': month,
+        'year': year,
+        'description': description
       };
   static Time fromJson(Map<String, dynamic> json) => Time(
         id: json['id'],
-        am: json['am'],
         hours: json['hours'],
         minutes: json['minutes'],
+        date: json['date'],
+        month: json['month'],
+        year: json['year'],
+        description: json['description'],
       );
 }
 
