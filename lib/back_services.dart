@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:background_service/background_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -41,6 +41,7 @@ void onStart() {
     service.setForegroundMode(true);
     Timer.periodic(Duration(seconds: 20), (timer) async {
       late String lat, long;
+      String? uid = FirebaseAuth.instance.currentUser?.uid;
       await Firebase.initializeApp();
       try {
         Position position = await _getLocation();
@@ -53,11 +54,15 @@ void onStart() {
           await PermissionHandler.openDoNotDisturbSetting();
         } else {
           String? lati, longi;
-          var document =
-              await FirebaseFirestore.instance.collection('Location');
+          var document = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid)
+              .collection('Location');
           var all = await document.get();
           var firstId = all.docs.first.id;
           var document2 = (await FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid)
               .collection('Location')
               .doc(firstId)
               .get());
