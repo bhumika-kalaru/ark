@@ -1,6 +1,7 @@
 import 'package:ark/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class profile extends StatelessWidget {
   final user = FirebaseAuth.instance.currentUser!;
@@ -8,39 +9,34 @@ class profile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: white,
-          title: Text('Profile'),
+          // backgroundColor: white,
+          title: Text(
+            'Profile',
+            style: GoogleFonts.sourceSansPro(
+                fontSize: 22, fontWeight: FontWeight.w500),
+          ),
           centerTitle: true,
           leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
             },
-            child: Icon(Icons.arrow_back),
+            child: Icon(
+              Icons.arrow_back,
+            ),
           )),
       body: Container(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(
+                height: 20,
+              ),
               Text(
-                'Profile',
-                style: TextStyle(fontSize: 25),
+                user.email!,
+                style: GoogleFonts.sourceSansPro(
+                    fontSize: 24, fontWeight: FontWeight.w500),
               ),
-              SizedBox(
-                height: 30,
-              ),
-              CircleAvatar(
-                radius: 40,
-                backgroundImage: NetworkImage(user.photoURL!),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(user.displayName!),
-              SizedBox(
-                height: 20,
-              ),
-              Text(user.email!),
             ],
           ),
         ),

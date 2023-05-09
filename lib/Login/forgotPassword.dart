@@ -27,7 +27,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       await FirebaseAuth.instance
           .sendPasswordResetEmail(email: emailController.text.trim());
       SnackBar(
-        content: Text("Link Sent"),
+        content: Text(
+          "Link Sent",
+          style: GoogleFonts.gabriela(color: cream),
+        ),
       );
     } on FirebaseAuthException catch (e) {
       SnackBar(
@@ -48,7 +51,19 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     double h = MediaQuery.of(context).size.height,
         w = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(title: Text("Reset Password")),
+      appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                Icons.arrow_back,
+              )),
+          title: Text(
+            "Reset Password",
+            style: GoogleFonts.sourceSansPro(
+                fontSize: 22, fontWeight: FontWeight.w500),
+          )),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: w / 20, vertical: h / 80),
         child: Column(

@@ -30,7 +30,12 @@ class _SignUpState extends State<SignUp> {
     double h = MediaQuery.of(context).size.height,
         w = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(title: Text("Sign Up screen")),
+      appBar: AppBar(
+          title: Text(
+        "Sign Up screen",
+        style: GoogleFonts.sourceSansPro(
+            fontSize: 22, fontWeight: FontWeight.w500),
+      )),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

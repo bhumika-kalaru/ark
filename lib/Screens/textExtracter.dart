@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
 
 class CounterStorage {
@@ -72,7 +73,11 @@ class _FlutterDemoState extends State<FlutterDemo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Reading and Writing Files'),
+        title: Text(
+          'Reading and Writing Files',
+          style: GoogleFonts.sourceSansPro(
+              fontSize: 22, fontWeight: FontWeight.w500),
+        ),
       ),
       body: Center(
         child: Text(

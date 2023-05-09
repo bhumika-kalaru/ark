@@ -28,11 +28,7 @@ class EventButton extends StatelessWidget {
       onTap: () async {
         String? uid = FirebaseAuth.instance.currentUser?.uid;
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => EventScreen(
-                      userId: uid,
-                    )));
+            context, MaterialPageRoute(builder: (context) => EventScreen()));
       },
     );
   }

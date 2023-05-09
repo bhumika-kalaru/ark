@@ -7,6 +7,7 @@ import 'package:ark/Login/logIn.dart';
 import 'package:ark/Widgets/pickFile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:sound_mode/permission_handler.dart';
 import 'package:sound_mode/sound_mode.dart';
 import 'package:sound_mode/utils/ringer_mode_statuses.dart';
@@ -104,18 +105,25 @@ class _MainScreenState extends State<MainScreen> {
           },
         ),
       ])),
-      appBar: AppBar(actions: [
-        IconButton(
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => LogIn()),
-                (Route<dynamic> route) => false,
-              );
-            },
-            icon: Icon(Icons.logout))
-      ]),
+      appBar: AppBar(
+          centerTitle: true,
+          title: (Text(
+            "Hello There...!",
+            style: GoogleFonts.sourceSansPro(
+                fontSize: 22, fontWeight: FontWeight.w500),
+          )),
+          actions: [
+            IconButton(
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => LogIn()),
+                    (Route<dynamic> route) => false,
+                  );
+                },
+                icon: Icon(Icons.logout))
+          ]),
       body: Container(
         child: Center(
           child: Column(

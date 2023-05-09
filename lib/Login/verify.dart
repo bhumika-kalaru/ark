@@ -20,7 +20,11 @@ class _VerifyState extends State<Verify> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Email Verification"),
+        title: Text(
+          "Email Verification",
+          style: GoogleFonts.sourceSansPro(
+              fontSize: 22, fontWeight: FontWeight.w500),
+        ),
         centerTitle: true,
       ),
       body: Container(

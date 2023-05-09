@@ -1,7 +1,9 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:ark/Screens/profile.dart';
 import 'package:ark/Widgets/addEvent.dart';
 import 'package:ark/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,15 +11,20 @@ import 'package:sound_mode/permission_handler.dart';
 import 'package:sound_mode/sound_mode.dart';
 import 'package:sound_mode/utils/ringer_mode_statuses.dart';
 
+import '../Login/forgotPassword.dart';
+import 'myLocations.dart';
+
 class EventScreen extends StatefulWidget {
-  const EventScreen({super.key, required this.userId});
-  final String? userId;
+  const EventScreen({
+    super.key,
+  });
 
   @override
   State<EventScreen> createState() => _EventScreenState();
 }
 
 class _EventScreenState extends State<EventScreen> {
+  String? userId = FirebaseAuth.instance.currentUser?.uid;
   TimeOfDay? timeOfDay = const TimeOfDay(hour: 9, minute: 22);
   int alarmID = 1;
   @override
@@ -25,7 +32,60 @@ class _EventScreenState extends State<EventScreen> {
     double h = MediaQuery.of(context).size.height,
         w = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(),
+      drawer: Drawer(
+          child: ListView(children: [
+        ListTile(
+          tileColor: white,
+          title: Center(child: Text('Account')),
+          onTap: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => profile()));
+          },
+        ),
+        ListTile(
+          tileColor: white,
+          title: Center(child: Text('Change Password')),
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ForgotPassword()));
+          },
+        ),
+        ListTile(
+          tileColor: white,
+          title: Center(child: Text('Change to normal mode')),
+          onTap: () async {
+            bool? isGranted = await PermissionHandler.permissionsGranted;
+            print(SoundMode.ringerModeStatus);
+            print("hello");
+            if (!isGranted!) {
+              // Opens the Do Not Disturb Access settings to grant the access
+              await PermissionHandler.openDoNotDisturbSetting();
+            } else {
+              try {
+                await SoundMode.setSoundMode(RingerModeStatus.normal);
+              } on PlatformException {
+                print('Please enable permissions required');
+              }
+            }
+          },
+        ),
+        ListTile(
+          tileColor: white,
+          title: Center(child: Text('Location')),
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => MyLocations()));
+          },
+        ),
+      ])),
+      appBar: AppBar(
+        title: Text(
+          "Current Events",
+          style: GoogleFonts.sourceSansPro(
+              fontSize: 22, fontWeight: FontWeight.w500),
+        ),
+        centerTitle: true,
+      ),
       body: Stack(
         children: [
           Container(
@@ -115,7 +175,7 @@ class _EventScreenState extends State<EventScreen> {
                   setState(() async {
                     await FirebaseFirestore.instance
                         .collection('users')
-                        .doc(widget.userId)
+                        .doc(userId)
                         .collection('time')
                         .doc(time.id)
                         .update({
@@ -156,7 +216,7 @@ class _EventScreenState extends State<EventScreen> {
                   // setState(() async {
                   final doc = FirebaseFirestore.instance
                       .collection('users')
-                      .doc(widget.userId)
+                      .doc(userId)
                       .collection('time')
                       .doc(time.id);
                   doc.delete();
@@ -174,7 +234,7 @@ class _EventScreenState extends State<EventScreen> {
 
   Stream<List<Time>> readUsers() => FirebaseFirestore.instance
       .collection('users')
-      .doc(widget.userId)
+      .doc(userId)
       .collection('time')
       .snapshots()
       .map((snapshot) =>
@@ -187,7 +247,7 @@ class _EventScreenState extends State<EventScreen> {
       required bool am}) async {
     final docUser = FirebaseFirestore.instance
         .collection('users')
-        .doc(widget.userId)
+        .doc(userId)
         .collection('time')
         .doc();
     final time = Time(id: docUser.id, hours: hours, am: am, minutes: minutes);

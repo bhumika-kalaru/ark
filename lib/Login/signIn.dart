@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:ark/Screens/eventScreen.dart';
 import 'package:ark/Screens/mainScreen.dart';
 import 'package:ark/Login/signUp.dart';
 import 'package:ark/Login/verify.dart';
@@ -34,7 +37,11 @@ class _SignInState extends State<SignIn> {
         w = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Log in "),
+        title: Text(
+          "Log in ",
+          style: GoogleFonts.sourceSansPro(
+              fontSize: 22, fontWeight: FontWeight.w500),
+        ),
         centerTitle: true,
       ),
       body: Column(
@@ -67,7 +74,9 @@ class _SignInState extends State<SignIn> {
                       color: white, fontWeight: FontWeight.w500, fontSize: 18),
                 )),
                 decoration: BoxDecoration(
-                    color: blue, borderRadius: BorderRadius.circular(10)),
+                    color: maincolour,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: blueShadow),
               ),
               onTap: () async {
                 bool? isGranted = await PermissionHandler.permissionsGranted;
@@ -75,9 +84,11 @@ class _SignInState extends State<SignIn> {
                   // Opens the Do Not Disturb Access settings to grant the access
                   await PermissionHandler.openDoNotDisturbSetting();
                 }
-                LocationPermission permission = await Geolocator.checkPermission();
+                LocationPermission permission =
+                    await Geolocator.checkPermission();
                 if (permission == LocationPermission.denied) {
-                permission = await Geolocator.requestPermission();}
+                  permission = await Geolocator.requestPermission();
+                }
                 int size = emailController.text.length, flag = 1, j = 0;
                 String s = "iiita.ac.in",
                     email = emailController.text.toString();
@@ -100,7 +111,7 @@ class _SignInState extends State<SignIn> {
                             password: passwordController.text);
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) => MainScreen()),
+                      MaterialPageRoute(builder: (context) => EventScreen()),
                       (Route<dynamic> route) => false,
                     );
                   } on FirebaseAuthException catch (e) {
@@ -134,11 +145,12 @@ class _SignInState extends State<SignIn> {
             child: RichText(
                 text: TextSpan(
                     text: 'Create an account?!',
-                    style: GoogleFonts.openSans(color: black, fontSize: 16),
+                    style:
+                        GoogleFonts.openSans(color: maincolour, fontSize: 16),
                     children: [
                   TextSpan(
                     text: "signUp",
-                    style: GoogleFonts.openSans(color: blue, fontSize: 16),
+                    style: GoogleFonts.openSans(color: pink, fontSize: 16),
                   )
                 ])),
             onTap: (() {
@@ -151,7 +163,7 @@ class _SignInState extends State<SignIn> {
                 margin: EdgeInsets.symmetric(vertical: h / 100),
                 child: Text(
                   "forgot password!",
-                  style: GoogleFonts.openSans(color: blue, fontSize: 16),
+                  style: GoogleFonts.openSans(color: pink, fontSize: 16),
                 )),
             onTap: (() {
               Navigator.push(context,
