@@ -344,9 +344,9 @@ class _EventScreenState extends State<EventScreen> {
                                 _selectedTime.hour,
                                 _selectedTime.minute,
                                 0);
-                            updateReminder(int.parse(time.id), update,
-                                _descriptionController.text);
                             Navigator.of(context).pop();
+                            await updateReminder(int.parse(time.id), update,
+                                _descriptionController.text);
                           },
                           child: Text(
                             'Save',

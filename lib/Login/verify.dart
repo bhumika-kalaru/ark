@@ -81,7 +81,7 @@ class _VerifyState extends State<Verify> {
                           Text(
                             "Send OTP",
                             style: GoogleFonts.openSans(
-                                color: blue, fontWeight: FontWeight.w700),
+                                color: pink, fontWeight: FontWeight.w700),
                           ),
                         ],
                       )),
