@@ -13,12 +13,14 @@ class LogIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double h = MediaQuery.of(context).size.height,
+        w = MediaQuery.of(context).size.width;
     return Scaffold(
       body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return EventScreen();
+            return EventScreen(w: w, h: h);
           }
           return SignIn();
         },

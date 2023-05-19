@@ -1,3 +1,4 @@
+import 'package:ark/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -120,7 +121,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       color: white, fontWeight: FontWeight.w500, fontSize: 18),
                 )),
                 decoration: BoxDecoration(
-                    color: blue, borderRadius: BorderRadius.circular(10)),
+                    color: maincolour,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: blueShadow),
               ),
             )
           ],

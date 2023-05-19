@@ -39,10 +39,12 @@ void onStart() {
       service.setForegroundMode(false);
     }
     service.setForegroundMode(true);
-    Timer.periodic(Duration(seconds: 20), (timer) async {
+    Timer.periodic(Duration(seconds: 15), (timer) async {
+      print("43");
       late String lat, long;
-      String? uid = FirebaseAuth.instance.currentUser?.uid;
       await Firebase.initializeApp();
+      String? uid = FirebaseAuth.instance.currentUser?.uid;
+      print("47");
       try {
         Position position = await _getLocation();
         print("get location start");
@@ -50,6 +52,7 @@ void onStart() {
         long = '${position.longitude}';
         bool? isGranted = await PermissionHandler.permissionsGranted;
         if (!isGranted!) {
+          print("56-isgranted  ");
           // Opens the Do Not Disturb Access settings to grant the access
           await PermissionHandler.openDoNotDisturbSetting();
         } else {
@@ -83,6 +86,19 @@ void onStart() {
           print(distanceInMeters);
           if (distanceInMeters < 100) {
             await SoundMode.setSoundMode(RingerModeStatus.silent);
+            bool? isGranted = await PermissionHandler.permissionsGranted;
+            print(SoundMode.ringerModeStatus);
+            print("hello");
+            if (!isGranted!) {
+              // Opens the Do Not Disturb Access settings to grant the access
+              await PermissionHandler.openDoNotDisturbSetting();
+            } else {
+              try {
+                await SoundMode.setSoundMode(RingerModeStatus.silent);
+              } on PlatformException {
+                print('Please enable permissions required');
+              }
+            }
           }
         }
       } on PlatformException {

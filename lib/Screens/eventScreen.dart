@@ -1,6 +1,7 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:ark/Screens/profile.dart';
 import 'package:ark/Widgets/addEvent.dart';
+import 'package:ark/Widgets/reminder.dart';
 import 'package:ark/constants.dart';
 import 'package:ark/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,12 +14,12 @@ import 'package:sound_mode/sound_mode.dart';
 import 'package:sound_mode/utils/ringer_mode_statuses.dart';
 
 import '../Login/forgotPassword.dart';
+import '../Login/logIn.dart';
 import 'myLocations.dart';
 
 class EventScreen extends StatefulWidget {
-  const EventScreen({
-    super.key,
-  });
+  const EventScreen({required this.w, required this.h});
+  final double h, w;
 
   @override
   State<EventScreen> createState() => _EventScreenState();
@@ -78,6 +79,18 @@ class _EventScreenState extends State<EventScreen> {
                 MaterialPageRoute(builder: (context) => MyLocations()));
           },
         ),
+        ListTile(
+          tileColor: white,
+          title: Center(child: Text('Log Out')),
+          onTap: () async {
+            await FirebaseAuth.instance.signOut();
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => LogIn()),
+              (Route<dynamic> route) => false,
+            );
+          },
+        ),
       ])),
       appBar: AppBar(
         title: Text(
@@ -117,20 +130,6 @@ class _EventScreenState extends State<EventScreen> {
             String description = '';
             DateTime alarm = DateTime(2023);
             setState(() async {
-              bool? isGranted = await PermissionHandler.permissionsGranted;
-              print(SoundMode.ringerModeStatus);
-              print("hello");
-              if (!isGranted!) {
-                // Opens the Do Not Disturb Access settings to grant the access
-                await PermissionHandler.openDoNotDisturbSetting();
-              } else {
-                try {
-                  await SoundMode.setSoundMode(RingerModeStatus.silent);
-                } on PlatformException {
-                  print('Please enable permissions required');
-                }
-              }
-
               // Show dialog to get the description input
               String? description;
 
@@ -156,6 +155,12 @@ class _EventScreenState extends State<EventScreen> {
                         onPressed: () {
                           if (description != null && description!.isNotEmpty) {
                             Navigator.of(context).pop();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Please enter a description'),
+                              ),
+                            );
                           }
                         },
                       ),
@@ -196,16 +201,11 @@ class _EventScreenState extends State<EventScreen> {
                       minutes: timeOfDay!.minute.toString(),
                     );
                     alarm = DateTime(y, m, d, h, mi, 0);
+                    scheduleReminder(alarm, description!);
 
                     AndroidAlarmManager.oneShotAt(alarm, alarmID, fireAlarm);
                   }
                 }
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Please enter a description'),
-                  ),
-                );
               }
             });
           }),
@@ -224,6 +224,7 @@ class _EventScreenState extends State<EventScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
+            width: widget.w * 0.7,
             child: GestureDetector(
               onTap: () async {
                 TextEditingController _descriptionController =
@@ -336,7 +337,15 @@ class _EventScreenState extends State<EventScreen> {
                               'hours': _selectedTime.hour.toString(),
                               'minutes': _selectedTime.minute.toString(),
                             });
-
+                            DateTime update = DateTime(
+                                _selectedDate.year,
+                                _selectedDate.month,
+                                _selectedDate.day,
+                                _selectedTime.hour,
+                                _selectedTime.minute,
+                                0);
+                            updateReminder(int.parse(time.id), update,
+                                _descriptionController.text);
                             Navigator.of(context).pop();
                           },
                           child: Text(
@@ -353,20 +362,47 @@ class _EventScreenState extends State<EventScreen> {
                 );
               },
               child: Container(
+                width: widget.w * 0.18,
+                padding: EdgeInsets.symmetric(
+                    vertical: widget.w * 0.008, horizontal: widget.w * 0.01),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Center(
+                      child: Text(
+                        time.description,
+                        style: GoogleFonts.mukta(fontSize: 24),
+                      ),
+                    ),
+                    // Center(
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.center,
+                    //     children: [
+                    Center(
                         child: Text(
                       time.hours.padLeft(2, '0') +
-                          " : " +
-                          // ((((int.tryParse(time.minutes))!/10)=0)?'0':'' )+
+                          ":" +
                           time.minutes.padLeft(2, '0'),
-                      // +(time.am ? " am" : " pm"),
-                      style: GoogleFonts.lato(
-                          fontSize: 20, fontWeight: FontWeight.w800),
+                      style: GoogleFonts.inter(
+                          fontSize: 20, fontWeight: FontWeight.w500),
                     )),
+                    SizedBox(
+                      width: 50,
+                    ),
+                    Center(
+                        child: Text(
+                      time.date.padLeft(2, '0') +
+                          "-" +
+                          time.month.padLeft(2, '0') +
+                          "-" +
+                          time.year,
+                      style: GoogleFonts.inter(
+                          fontSize: 20, fontWeight: FontWeight.w500),
+                    )),
+                    // ],
+                    // ),
+                    // ),
                   ],
                 ),
               ),

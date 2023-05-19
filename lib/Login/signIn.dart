@@ -111,7 +111,11 @@ class _SignInState extends State<SignIn> {
                             password: passwordController.text);
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) => EventScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => EventScreen(
+                                h: h,
+                                w: w,
+                              )),
                       (Route<dynamic> route) => false,
                     );
                   } on FirebaseAuthException catch (e) {

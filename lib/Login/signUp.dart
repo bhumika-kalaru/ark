@@ -79,7 +79,11 @@ class _SignUpState extends State<SignUp> {
                 signUp();
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => EventScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => EventScreen(
+                            h: h,
+                            w: w,
+                          )),
                   (Route<dynamic> route) => false,
                 );
               });
