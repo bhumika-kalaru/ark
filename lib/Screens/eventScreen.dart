@@ -4,7 +4,10 @@ import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:ark/Screens/feedback.dart';
 import 'package:ark/Screens/profile.dart';
 import 'package:ark/Widgets/addEvent.dart';
+import 'package:ark/Widgets/pickFile.dart';
 import 'package:ark/Widgets/reminder.dart';
+import 'package:ark/Widgets/scanner.dart';
+import 'package:ark/Widgets/scannnn.dart';
 import 'package:ark/constants.dart';
 import 'package:ark/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -88,6 +91,15 @@ class _EventScreenState extends State<EventScreen> {
           onTap: () {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => MyLocations()));
+          },
+        ),
+        ListTile(
+          leading: Icon(Icons.location_on_sharp, color: one),
+          tileColor: white,
+          title: Center(child: Text('ScanPdf')),
+          onTap: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => ScanPdf()));
           },
         ),
         ListTile(
