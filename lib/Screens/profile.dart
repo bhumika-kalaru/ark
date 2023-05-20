@@ -7,6 +7,10 @@ class profile extends StatelessWidget {
   final user = FirebaseAuth.instance.currentUser!;
   @override
   Widget build(BuildContext context) {
+    double h = MediaQuery.of(context).size.height,
+        w = MediaQuery.of(context).size.height;
+
+    TextEditingController _nameOfPlaceController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
           // backgroundColor: white,
@@ -29,6 +33,13 @@ class profile extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              CircleAvatar(
+                radius: h / 15,
+                backgroundImage: AssetImage(
+                  'images/flutter.png',
+                ),
+                backgroundColor: Colors.transparent,
+              ),
               SizedBox(
                 height: 20,
               ),

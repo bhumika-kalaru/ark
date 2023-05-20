@@ -16,6 +16,8 @@ final Color cream = Color(0xffFCFFE7);
 // 0xff2B3467
 
 final Color pink = Color(0xfff61f7a);
+final Color amber = Colors.amber;
+final Color one = maincolour!;
 // final Color cream = Color(0xfff6d9b8);
 
 List<BoxShadow> blueShadow = [

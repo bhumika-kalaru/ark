@@ -132,14 +132,23 @@ class _LocationState extends State<Location> {
 }
 
 class location {
-  late String id;
+  late String id, nameOfPlace;
   final String latitude, longitude;
-  location({this.id = '', required this.latitude, required this.longitude});
+  location(
+      {this.id = '',
+      required this.latitude,
+      required this.longitude,
+      required this.nameOfPlace});
 
-  Map<String, dynamic> toJson() =>
-      {'id': id, 'latitude': latitude, 'longitude': longitude};
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'nameOfPlace': nameOfPlace,
+        'latitude': latitude,
+        'longitude': longitude
+      };
   static location fromJson(Map<String, dynamic> json) => location(
         id: json['id'],
+        nameOfPlace: json['nameOfPlace'],
         latitude: json['latitude'],
         longitude: json['longitude'],
       );

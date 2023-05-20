@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:ark/Screens/feedback.dart';
 import 'package:ark/Screens/profile.dart';
 import 'package:ark/Widgets/addEvent.dart';
 import 'package:ark/Widgets/reminder.dart';
@@ -36,7 +39,12 @@ class _EventScreenState extends State<EventScreen> {
     return Scaffold(
       drawer: Drawer(
           child: ListView(children: [
+        Container(
+          color: one,
+          height: 120, // Adjust the height as needed
+        ),
         ListTile(
+          leading: Icon(Icons.person, color: one),
           tileColor: white,
           title: Center(child: Text('Account')),
           onTap: () {
@@ -45,6 +53,7 @@ class _EventScreenState extends State<EventScreen> {
           },
         ),
         ListTile(
+          leading: Icon(Icons.password, color: one),
           tileColor: white,
           title: Center(child: Text('Change Password')),
           onTap: () {
@@ -53,6 +62,7 @@ class _EventScreenState extends State<EventScreen> {
           },
         ),
         ListTile(
+          leading: Icon(Icons.notifications_active, color: one),
           tileColor: white,
           title: Center(child: Text('Change to normal mode')),
           onTap: () async {
@@ -72,6 +82,7 @@ class _EventScreenState extends State<EventScreen> {
           },
         ),
         ListTile(
+          leading: Icon(Icons.location_on_sharp, color: one),
           tileColor: white,
           title: Center(child: Text('Location')),
           onTap: () {
@@ -80,6 +91,22 @@ class _EventScreenState extends State<EventScreen> {
           },
         ),
         ListTile(
+          leading: Icon(Icons.star, color: one),
+          tileColor: white,
+          title: Center(
+              child: Text(
+            'Feedback',
+          )),
+          onTap: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Feed()));
+          },
+        ),
+        ListTile(
+          leading: Icon(
+            Icons.logout,
+            color: Colors.red,
+          ),
           tileColor: white,
           title: Center(child: Text('Log Out')),
           onTap: () async {

@@ -18,6 +18,8 @@ class _VerifyState extends State<Verify> {
   EmailOTP myauth = EmailOTP();
   @override
   Widget build(BuildContext context) {
+    double h = MediaQuery.of(context).size.height,
+        w = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -96,29 +98,46 @@ class _VerifyState extends State<Verify> {
                         decoration:
                             const InputDecoration(hintText: "Enter OTP")),
                   ),
-                  ElevatedButton(
-                      onPressed: () async {
-                        if (await myauth.verifyOTP(otp: otp.text) == true) {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            content: Text("OTP is verified"),
-                          ));
-                          setState(() {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SignUp(
-                                          email: email.toString(),
-                                        )));
-                          });
-                        } else {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            content: Text("Invalid OTP"),
-                          ));
-                        }
-                      },
-                      child: const Text("Verify")),
+                  GestureDetector(
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: h / 80),
+                      height: h / 25,
+                      width: w / 4,
+                      child: Center(
+                          child: Text(
+                        "Verify",
+                        style: GoogleFonts.openSans(
+                            color: white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18),
+                      )),
+                      decoration: BoxDecoration(
+                          color: maincolour,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: blueShadow),
+                    ),
+                    onTap: () async {
+                      if (await myauth.verifyOTP(otp: otp.text) == true) {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text("OTP is verified"),
+                        ));
+                        setState(() {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SignUp(
+                                        email: email.toString(),
+                                      )));
+                        });
+                      } else {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text("Invalid OTP"),
+                        ));
+                      }
+                    },
+                  )
                 ],
               )
             ],

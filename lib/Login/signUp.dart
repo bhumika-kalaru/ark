@@ -67,7 +67,9 @@ class _SignUpState extends State<SignUp> {
                     color: white, fontWeight: FontWeight.w500, fontSize: 18),
               )),
               decoration: BoxDecoration(
-                  color: blue, borderRadius: BorderRadius.circular(10)),
+                  color: maincolour,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: blueShadow),
             ),
             onTap: () async {
               setState(() async {
@@ -97,8 +99,7 @@ class _SignUpState extends State<SignUp> {
                     children: [
                   TextSpan(
                     text: "LogIn",
-                    style:
-                        GoogleFonts.openSans(color: maincolour, fontSize: 16),
+                    style: GoogleFonts.openSans(color: pink, fontSize: 16),
                   )
                 ])),
             onTap: (() {
